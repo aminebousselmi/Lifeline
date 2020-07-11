@@ -6,16 +6,16 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
-	<groupId>com.lifeline</groupId>
+	<groupId>com.lifeline.api.homeconfig</groupId>
 	<artifactId>lifeline</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lifeline</name>
-	<description>Lifeline project</description>
+	<name>LifelineApiHomeConfig</name>
+	<description>Lifeline HomeConfig microservice</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
@@ -38,6 +38,11 @@
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

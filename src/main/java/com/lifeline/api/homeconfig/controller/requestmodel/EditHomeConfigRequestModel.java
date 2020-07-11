@@ -1,40 +1,12 @@
-package com.lifeline.entities;
-
-// FIXME Handle imports in generic utils file
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
+package com.lifeline.api.homeconfig.controller.requestmodel;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.UUID;
-
-@Entity
-@Table(name = "HomeConfig")
-public class HomeConfig implements Serializable {
+public class EditHomeConfigRequestModel {
 
     // ATTRIBUTS
-
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {@Parameter(
-                    name="uuid_gen_strategy_class",
-                    value="org.hibernate.id.uuid.CustomVersionOneStrategy")
-            })
-    private UUID uid;
-
     @NotNull(message = "Title is mandatory")
     @Size(min = 1, max = 50)
     private String title;
@@ -54,15 +26,7 @@ public class HomeConfig implements Serializable {
     @Pattern(regexp="(#(.*)(\\\\s))*",message="keywords must be inserted as follow : #word #word...etc")
     private StringBuffer keywords;
 
-    // CONSTRUCTOR
-
-    public HomeConfig() {}
-
     // GETTERS
-
-    public UUID getUid() {
-        return uid;
-    }
 
     public String getTitle() {
         return title;
@@ -98,28 +62,9 @@ public class HomeConfig implements Serializable {
         this.keywords = keywords;
     }
 
-    // Implementing equals, HashCode and toString method
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HomeConfig that = (HomeConfig) o;
-        return uid.equals(that.uid) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(shortIntro, that.shortIntro) &&
-                Objects.equals(aboutAuthor, that.aboutAuthor) &&
-                Objects.equals(keywords, that.keywords);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uid, title, shortIntro, aboutAuthor, keywords);
-    }
-
     @Override
     public String toString() {
         return "HomeConfig{" +
-                "uid=" + uid +
                 ", title='" + title + '\'' +
                 ", shortIntro=" + shortIntro +
                 ", aboutAuthor=" + aboutAuthor +
