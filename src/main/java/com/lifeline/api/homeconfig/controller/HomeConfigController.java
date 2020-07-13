@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/home/config")
@@ -40,7 +40,7 @@ public class HomeConfigController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<AddHomeConfigResponseModel> add(@RequestBody AddHomeConfigRequestModel configRequestModel){
+    public ResponseEntity<AddHomeConfigResponseModel> add(@Valid @RequestBody AddHomeConfigRequestModel configRequestModel){
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -57,7 +57,7 @@ public class HomeConfigController {
             value = "/{uid}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<GetHomeConfigResponseModel> getByUID(@PathVariable UUID uid){
+    public ResponseEntity<GetHomeConfigResponseModel> getByUID(@PathVariable String uid){
         HomeConfigDTO homeConfigDTO = homeConfigService.getByUID(uid);
 
         GetHomeConfigResponseModel responseModel = new ModelMapper().map(homeConfigDTO, GetHomeConfigResponseModel.class);
@@ -70,7 +70,7 @@ public class HomeConfigController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<EditHomeConfigResponseModel> editByUID (@PathVariable UUID uid, @RequestBody EditHomeConfigRequestModel configRequestModel){
+    public ResponseEntity<EditHomeConfigResponseModel> editByUID (@PathVariable String uid, @Valid @RequestBody EditHomeConfigRequestModel configRequestModel){
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

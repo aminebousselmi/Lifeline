@@ -50,20 +50,28 @@ public class HomeConfigServiceImpl implements HomeConfigService {
     }
 
     @Override
-    public HomeConfigDTO getByUID(UUID uid) {
-
-        HomeConfig homeConfig = homeConfigDAO.findByUid(uid);
+    public HomeConfigDTO getByUID(String uid) {
+        UUID id = UUID.fromString(uid);
+        HomeConfig homeConfig = homeConfigDAO.findByUid(id);
         return new ModelMapper().map(homeConfig, HomeConfigDTO.class);
     }
 
     @Override
-    public HomeConfigDTO editByUID(UUID uid, HomeConfigDTO homeConfigDTO) {
+    public HomeConfigDTO editByUID(String uid, HomeConfigDTO homeConfigDTO) {
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         HomeConfig homeConfig = modelMapper.map(homeConfigDTO, HomeConfig.class);
+        // FIXME Optional<Student> studentOptional = studentRepository.findById(id);
 
-        homeConfigDAO.editByUid(uid, homeConfig);
+        // FIXME if (!studentOptional.isPresent())
+        // FIXME   return ResponseEntity.notFound().build();
+
+        // FIXME student.setId(id);
+        UUID currUid = UUID.fromString(uid);
+        homeConfig.setUid(currUid);
+
+        homeConfigDAO.save(homeConfig);
 
         return modelMapper.map(homeConfig, HomeConfigDTO.class);
     }
