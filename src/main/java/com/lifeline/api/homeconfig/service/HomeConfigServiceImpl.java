@@ -4,6 +4,9 @@ import com.lifeline.api.homeconfig.dao.HomeConfigDAO;
 import com.lifeline.api.homeconfig.dto.HomeConfigDTO;
 import com.lifeline.api.homeconfig.entities.HomeConfig;
 
+import com.lifeline.api.homeconfig.utility.exceptions.custom.HomeConfigNotFoundException;
+import com.lifeline.api.homeconfig.utility.exceptions.custom.InvalidUUIDSignatureException;
+import com.lifeline.api.homeconfig.utility.helper.StringParser;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -28,21 +31,11 @@ public class HomeConfigServiceImpl implements HomeConfigService {
 
     @Override
     public HomeConfigDTO add(HomeConfigDTO homeConfigDTO) {
-
-        // FIXME Use Optional to handle null values
-        // Optional<HomeConfig> currHomeConfig = Optional.ofNullable(homeConfig);
-
-        // currHomeConfig.ifPresent(homeConfigDAO::save);
-        // HomeConfig orElse = currHomeConfig.orElse(null);
-
-        // if(homeConfigDTO.getUid() != null)
-        //    homeConfigDAO.save(homeConfig);
-        // else
-            // return OptMsgType.BAD_REQUEST;
-        // return OptMsgType.CREATED;
-
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper
+                .getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
+
         HomeConfig homeConfig = modelMapper.map(homeConfigDTO, HomeConfig.class);
         homeConfigDAO.save(homeConfig);
 
@@ -50,25 +43,37 @@ public class HomeConfigServiceImpl implements HomeConfigService {
     }
 
     @Override
-    public HomeConfigDTO getByUID(String uid) {
+    public HomeConfigDTO getByUID(String uid) throws HomeConfigNotFoundException, InvalidUUIDSignatureException {
+
+        if(uid.isEmpty())
+            throw new NullPointerException("Please specify a homeConfig ID");
+
+        if(!StringParser.isValidUUID(uid))
+            throw new InvalidUUIDSignatureException("Please specify a valid homeConfigID");
+
         UUID id = UUID.fromString(uid);
         HomeConfig homeConfig = homeConfigDAO.findByUid(id);
-        return new ModelMapper().map(homeConfig, HomeConfigDTO.class);
+
+        if(homeConfig == null)
+            throw new HomeConfigNotFoundException("Configuration ID not found, please insert a correct one");
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper
+                .getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return modelMapper.map(homeConfig, HomeConfigDTO.class);
     }
 
     @Override
-    public HomeConfigDTO editByUID(String uid, HomeConfigDTO homeConfigDTO) {
+    public HomeConfigDTO editByUID(String uid, HomeConfigDTO homeConfigDTO) throws HomeConfigNotFoundException, InvalidUUIDSignatureException {
+        HomeConfigDTO currConfig = getByUID(uid);
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         HomeConfig homeConfig = modelMapper.map(homeConfigDTO, HomeConfig.class);
-        // FIXME Optional<Student> studentOptional = studentRepository.findById(id);
 
-        // FIXME if (!studentOptional.isPresent())
-        // FIXME   return ResponseEntity.notFound().build();
-
-        // FIXME student.setId(id);
-        UUID currUid = UUID.fromString(uid);
+        UUID currUid = UUID.fromString(currConfig.getUid());
         homeConfig.setUid(currUid);
 
         homeConfigDAO.save(homeConfig);

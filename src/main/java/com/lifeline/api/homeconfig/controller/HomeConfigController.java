@@ -10,6 +10,9 @@ import com.lifeline.api.homeconfig.dto.HomeConfigDTO;
 
 import com.lifeline.api.homeconfig.service.HomeConfigService;
 
+import com.lifeline.api.homeconfig.utility.exceptions.custom.HomeConfigNotFoundException;
+import com.lifeline.api.homeconfig.utility.exceptions.custom.InvalidUUIDSignatureException;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -57,7 +60,7 @@ public class HomeConfigController {
             value = "/{uid}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<GetHomeConfigResponseModel> getByUID(@PathVariable String uid){
+    public ResponseEntity<GetHomeConfigResponseModel> getByUID(@PathVariable String uid) throws InvalidUUIDSignatureException, HomeConfigNotFoundException {
         HomeConfigDTO homeConfigDTO = homeConfigService.getByUID(uid);
 
         GetHomeConfigResponseModel responseModel = new ModelMapper().map(homeConfigDTO, GetHomeConfigResponseModel.class);
@@ -70,7 +73,7 @@ public class HomeConfigController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<EditHomeConfigResponseModel> editByUID (@PathVariable String uid, @Valid @RequestBody EditHomeConfigRequestModel configRequestModel){
+    public ResponseEntity<EditHomeConfigResponseModel> editByUID (@PathVariable String uid, @Valid @RequestBody EditHomeConfigRequestModel configRequestModel) throws HomeConfigNotFoundException, InvalidUUIDSignatureException {
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

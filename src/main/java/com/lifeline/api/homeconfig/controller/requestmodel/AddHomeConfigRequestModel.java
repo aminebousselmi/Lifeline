@@ -7,7 +7,7 @@ public class AddHomeConfigRequestModel {
 
     // ATTRIBUTS
 
-    @NotNull
+    @NotNull(message = "Title is mandatory")
     @Size(min = 1, max = 50, message = "Title is mandatory and should be less than 50 character")
     private String title;
 
@@ -20,7 +20,7 @@ public class AddHomeConfigRequestModel {
     private String aboutAuthor;
 
     // Using StringBuffer to iterate through keywords. Exemple : keyword = "#JPA #Hibernate" => JPA, Hibernate
-    @NotNull
+    @NotNull(message = "Keywords are mandatory")
     @Size(min = 2, max = 500, message = "Keywords are mandatory and should be less than 500 characters")
     //  FIXME Make this pattern more robust and check with MSSMS DB
     // @Pattern(regexp="(#(.*)(\\\\s))*",message="keywords must be inserted as follow : #word #word...etc")
