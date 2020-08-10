@@ -7,5 +7,4 @@ import com.lifeline.api.homeconfig.utility.exceptions.custom.InvalidUUIDSignatur
 public interface HomeConfigService {
     HomeConfigDTO add(HomeConfigDTO homeConfigDTO);
     HomeConfigDTO getByUID(String uid) throws HomeConfigNotFoundException, InvalidUUIDSignatureException;
-    HomeConfigDTO editByUID(String uid, HomeConfigDTO homeConfigDTO) throws HomeConfigNotFoundException, InvalidUUIDSignatureException;
 }

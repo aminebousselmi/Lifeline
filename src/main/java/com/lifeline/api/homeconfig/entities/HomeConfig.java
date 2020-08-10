@@ -1,22 +1,30 @@
 package com.lifeline.api.homeconfig.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+// @Audited FIXME Check audited
 @Table(name = "home_config")
 public class HomeConfig implements Serializable {
 
@@ -36,58 +44,26 @@ public class HomeConfig implements Serializable {
 
     @Column(nullable = false)
     @Size(min = 1, max = 50)
-    private String title;
+    private String shortDescription;
 
-    @Column(nullable = false)
-    @Size(min = 10, max = 1500)
-    private String shortIntro;
+    // RELATIONS
 
-    @Column(nullable = false)
-    @Size(min = 10, max = 1500)
-    private String aboutAuthor;
-
-    // Using Pattern to iterate through keywords. Exemple : keyword = "#JPA #Hibernate" => JPA, Hibernate
-    @Column(nullable = false)
-    @Size(min = 1, max = 500)
-    //  FIXME Make this pattern more robust and check with MSSMS DB
-    // @Pattern(regexp="(#(.*)(\\\\s))*")
-    private String keywords;
+    @OneToMany(mappedBy = "homeConfig", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Section> sections = new ArrayList<>();
 
     // GETTERS
 
-    public UUID getUid() {
-        return uid;
-    }
-    public String getTitle() {
-        return title;
-    }
-    public String getShortIntro() {
-        return shortIntro;
-    }
-    public String getAboutAuthor() {
-        return aboutAuthor;
-    }
-    public String getKeywords() {
-        return keywords;
-    }
+    public UUID getUid() { return uid; }
+    public String getShortDescription() { return shortDescription; }
+    public List<Section> getSections() { return sections; }
+
 
     // SETTERS
 
-    public void setUid(UUID uid) {
-        this.uid = uid;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public void setShortIntro(String shortIntro) {
-        this.shortIntro = shortIntro;
-    }
-    public void setAboutAuthor(String aboutAuthor) {
-        this.aboutAuthor = aboutAuthor;
-    }
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
+    public void setUid(UUID uid) { this.uid = uid; }
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
+    public void setSections(List<Section> sections) { this.sections = sections; }
 
     // Implementing equals, HashCode and toString method
 
@@ -97,25 +73,21 @@ public class HomeConfig implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         HomeConfig that = (HomeConfig) o;
         return uid.equals(that.uid) &&
-                title.equals(that.title) &&
-                shortIntro.equals(that.shortIntro) &&
-                aboutAuthor.equals(that.aboutAuthor) &&
-                keywords.equals(that.keywords);
+                shortDescription.equals(that.shortDescription) &&
+                Objects.equals(sections, that.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uid, title, shortIntro, aboutAuthor, keywords);
+        return Objects.hash(uid, shortDescription, sections);
     }
 
     @Override
     public String toString() {
         return "HomeConfig{" +
                 "uid=" + uid +
-                ", title='" + title + '\'' +
-                ", shortIntro=" + shortIntro +
-                ", aboutAuthor=" + aboutAuthor +
-                ", keywords=" + keywords +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", sections=" + sections +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import com.lifeline.api.homeconfig.entities.HomeConfig;
 import com.lifeline.api.homeconfig.utility.exceptions.custom.HomeConfigNotFoundException;
 import com.lifeline.api.homeconfig.utility.exceptions.custom.InvalidUUIDSignatureException;
 import com.lifeline.api.homeconfig.utility.helper.StringParser;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -27,6 +28,7 @@ public class HomeConfigServiceImpl implements HomeConfigService {
             HomeConfigDAO homeConfigDAO
     ){
         this.homeConfigDAO = homeConfigDAO;
+
     }
 
     @Override
@@ -34,7 +36,7 @@ public class HomeConfigServiceImpl implements HomeConfigService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper
                 .getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STRICT);
+                .setMatchingStrategy(MatchingStrategies.LOOSE);
 
         HomeConfig homeConfig = modelMapper.map(homeConfigDTO, HomeConfig.class);
         homeConfigDAO.save(homeConfig);
@@ -61,22 +63,6 @@ public class HomeConfigServiceImpl implements HomeConfigService {
         modelMapper
                 .getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return modelMapper.map(homeConfig, HomeConfigDTO.class);
-    }
-
-    @Override
-    public HomeConfigDTO editByUID(String uid, HomeConfigDTO homeConfigDTO) throws HomeConfigNotFoundException, InvalidUUIDSignatureException {
-        HomeConfigDTO currConfig = getByUID(uid);
-
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        HomeConfig homeConfig = modelMapper.map(homeConfigDTO, HomeConfig.class);
-
-        UUID currUid = UUID.fromString(currConfig.getUid());
-        homeConfig.setUid(currUid);
-
-        homeConfigDAO.save(homeConfig);
 
         return modelMapper.map(homeConfig, HomeConfigDTO.class);
     }

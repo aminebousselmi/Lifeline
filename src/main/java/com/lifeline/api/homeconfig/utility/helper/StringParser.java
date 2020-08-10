@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public class StringParser {
 
+    // Check if an UUID key is valid using regex Pattern
     public static Boolean isValidUUID(String uuid){
         if (uuid.isEmpty()) return Boolean.FALSE;
 

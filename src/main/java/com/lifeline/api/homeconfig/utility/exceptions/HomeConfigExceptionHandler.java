@@ -20,17 +20,18 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class HomeConfigExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // Handle field errors
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-        List<String> validationList = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+        List<String> validationList = ex.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
 
         ValidationListError errorMessages = new ValidationListError(new Date(), validationList);
 
         return new ResponseEntity<>(errorMessages, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    // Handle UUID in case of putting an invalid key
     @ExceptionHandler(value = {InvalidUUIDSignatureException.class})
     public ResponseEntity<Object> handleInvalidUUIDException(InvalidUUIDSignatureException exception, WebRequest request) {
 
@@ -41,6 +42,7 @@ public class HomeConfigExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    // Handle Empty List or object
     @ExceptionHandler(value = {HomeConfigNotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(HomeConfigNotFoundException exception, WebRequest request) {
 
@@ -51,6 +53,7 @@ public class HomeConfigExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    // Handle NullPointer Exception
     @ExceptionHandler(value = {NullPointerException.class})
     public ResponseEntity<Object> handleNullPointerException(NullPointerException exception, WebRequest request){
 
@@ -61,6 +64,7 @@ public class HomeConfigExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    // Handle General Exception
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleAnyException(Exception exception, WebRequest request){
 

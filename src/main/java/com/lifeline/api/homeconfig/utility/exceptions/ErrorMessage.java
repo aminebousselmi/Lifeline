@@ -13,20 +13,9 @@ public class ErrorMessage {
         this.message = message;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
+    public Date getTimestamp() { return timestamp; }
+    public String getMessage() { return message; }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
+    public void setMessage(String message) { this.message = message; }
 }

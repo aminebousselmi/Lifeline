@@ -1,61 +1,57 @@
 package com.lifeline.api.homeconfig.dto;
 
-// FIXME Handle imports in generic utils file
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class HomeConfigDTO{
 
     // ATTRIBUTS
-    private String uid;
-    private String title;
-    private String shortIntro;
-    private String aboutAuthor;
-    private String keywords;
+
+    private UUID uid;
+    private String shortDescription;
+    private List<SectionDTO> sections = new ArrayList<>();
 
     // GETTERS
 
-    public String getUid() {
+    public UUID getUid() {
         return uid;
     }
-    public String getTitle() {
-        return title;
-    }
-    public String getShortIntro() {
-        return shortIntro;
-    }
-    public String getAboutAuthor() {
-        return aboutAuthor;
-    }
-    public String getKeywords() {
-        return keywords;
-    }
+    public String getShortDescription() { return shortDescription; }
+    public List<SectionDTO> getSections() { return sections; }
 
     // SETTERS
 
-    public void setUid(String uid) {
+    public void setUid(UUID uid) {
         this.uid = uid;
     }
-    public void setTitle(String title) {
-        this.title = title;
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
+    public void setSections(List<SectionDTO> sections) { this.sections = sections; }
+
+    // Implementing equals, HashCode and toString method
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HomeConfigDTO that = (HomeConfigDTO) o;
+        return uid.equals(that.uid) &&
+                shortDescription.equals(that.shortDescription) &&
+                Objects.equals(sections, that.sections);
     }
-    public void setShortIntro(String shortIntro) {
-        this.shortIntro = shortIntro;
-    }
-    public void setAboutAuthor(String aboutAuthor) {
-        this.aboutAuthor = aboutAuthor;
-    }
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uid, shortDescription, sections);
     }
 
     @Override
     public String toString() {
-        return "HomeConfig{" +
-                ", title='" + title + '\'' +
-                ", shortIntro=" + shortIntro +
-                ", aboutAuthor=" + aboutAuthor +
-                ", keywords=" + keywords +
+        return "HomeConfigDTO{" +
+                "uid=" + uid +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", sections=" + sections +
                 '}';
     }
 }
